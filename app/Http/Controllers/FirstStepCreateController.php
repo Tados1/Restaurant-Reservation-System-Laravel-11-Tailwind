@@ -51,8 +51,6 @@ class FirstStepCreateController extends Controller
     
         session(['date' => $date]);
     
-        return redirect()->route('reservations.create')->with('success', "You choose $formattedDate successfully.");
+        return redirect()->route('reservations.create')->with('success', "You chose $formattedDate successfully.");
     }
-
-  
 }

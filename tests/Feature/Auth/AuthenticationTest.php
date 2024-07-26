@@ -51,4 +51,12 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_unauthenticated_user_cannot_access_reservations() 
+    {
+        $response = $this->get('/reservations');
+
+        $response->assertStatus(302);
+        $response->assertRedirect('login');
+    }
 }

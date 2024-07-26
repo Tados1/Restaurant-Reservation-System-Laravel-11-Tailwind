@@ -14,9 +14,19 @@ class OpeningHoursController extends Controller
     public function index()
     {
         $openingHour = OpeningHours::first();
-        $hours = $openingHour ? $openingHour->hours : null;
+        
+        if ($openingHour) {
+            $fromHour = sprintf('%02d:00', $openingHour->hours['from_hour']);
+            $toHour = sprintf('%02d:00', $openingHour->hours['to_hour']);
+            $hours = [
+                'from_hour' => $fromHour,
+                'to_hour' => $toHour,
+            ];
+        } else {
+            $hours = null;
+        }
     
-        return view('opening-hours.index', compact('hours'));
+        return view('welcome', compact('hours'));
     }
 
     /**

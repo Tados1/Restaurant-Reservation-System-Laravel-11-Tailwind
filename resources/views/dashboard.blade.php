@@ -1,7 +1,9 @@
 <x-app-layout>
 
     @if (session('success'))
-        <p class="text-rose-500 text-2xl text-center m-4">{{ session('success') }}</p>
+    <div class="bg-black/70 rounded-b-lg font-josefin">
+            <p class="text-rose-500 text-center text-2xl p-4">{{ session('success') }}</p>
+        </div>
     @endif
 
     <div class="w-full h-full flex flex-col justify-center items-center xl:flex-row xl:mt-11">

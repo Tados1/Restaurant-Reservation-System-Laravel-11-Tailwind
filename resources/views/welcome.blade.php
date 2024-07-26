@@ -30,6 +30,15 @@
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <h1 class="text-rose-500 text-2xl font-josefin font-bold md:text-4xl">Restaurant Tado</h1>
                     <p class="text-xl font-moderne text-slate-300 md:text-2xl xl:text-4xl">We eagerly await your visit!</p>
+
+                    @if($hours)
+                        <div class="flex justify-center items-center gap-2 mt-4 text-xl font-josefin text-slate-300 md:text-2xl xl:text-4xl xl:mt-8">
+                            <x-opening-hours-logo class="w-8 h-8 xl:w-12 xl:h-12"/>
+                            <p>{{ $hours['from_hour'] }} - {{ $hours['to_hour'] }}</p>
+                        </div>
+                    @else
+                        <p>Opening hours are not available.</p>
+                    @endif
                 </div>
             </div>
         </header>

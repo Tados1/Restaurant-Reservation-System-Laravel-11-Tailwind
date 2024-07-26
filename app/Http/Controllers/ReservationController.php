@@ -38,11 +38,11 @@ class ReservationController extends Controller
     }
 
     //Ziskame kolekciu voľných časov od otvorenia do zatvorenia, ak uživateľ zvolí dnešný dátum, tak kolekcia bude začínať od momentálnej najbližšej hodiny
-    private function generateAvailableHours($openingHour, $actual_hour, $date, $today)
+    public function generateAvailableHours($openingHour, $actual_hour, $date, $today)
     {
-        $hours = collect($openingHour->hours);
-        $start_hour = $hours["from_hour"];
-        $end_hour = $hours["to_hour"] - 1;
+        $hours = collect($openingHour);
+        $start_hour = (int) substr($hours["from"], 0, 2);
+        $end_hour = (int) substr($hours["to"], 0, 2) - 1;
     
         $available_hours = [];
     
@@ -86,10 +86,11 @@ class ReservationController extends Controller
     }
 
     //Odstráni vybookované časy a vráti len dostupné
-    private function getFreeTimes($availableTimes, $bookedTimes) {
+    public function getFreeTimes($availableTimes, $bookedTimes)
+    {
         return collect($availableTimes)->reject(function ($time) use ($bookedTimes) {
             return $bookedTimes->contains($time);
-        });
+        })->values();
     }
 
     /**
@@ -124,8 +125,10 @@ class ReservationController extends Controller
             } else {
 
                 if(!$availableTables->isEmpty()) {
-
                     $table_id = $availableTables[0]->id;
+
+                    session(['availability' => "All times available."]);
+
                     return view('reservations.create', compact('availableTimes', 'table_id'));
 
                 } else {        
@@ -134,9 +137,11 @@ class ReservationController extends Controller
                     $bookedTimes = $this->getBookedTimes($availableTimes, $seats, $date);
 
                     //Odstráni vybookované časy a vráti len dostupné
-                    $availableHours = $this->getFreeTimes($availableTimes, $bookedTimes);
+                    $remainingHours = $this->getFreeTimes($availableTimes, $bookedTimes);
 
-                    return view('reservations.create', compact('availableHours'));
+                    session(['availability' => "The following times remain."]);
+
+                    return view('reservations.create', compact('remainingHours'));
                 }
            }
         }
@@ -186,7 +191,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        return view('posts.show', compact('reservation'));
+        //
     }
 
     /**
